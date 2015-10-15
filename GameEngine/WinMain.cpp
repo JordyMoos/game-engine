@@ -95,17 +95,15 @@ bool createMainWindow(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps;
-	HDC hdc;
-	char greeting[] = "Hello, World!";
 
 	switch (message)
 	{
 	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
 
+		PAINTSTRUCT ps;
+		char greeting[] = "Hello, World!";
+		HDC hdc = BeginPaint(hWnd, &ps);
 		TextOut(hdc, 5, 5, greeting, sizeof(greeting));
-
 		EndPaint(hWnd, &ps);
 		break;
 
