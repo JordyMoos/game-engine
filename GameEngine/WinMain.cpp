@@ -5,6 +5,7 @@
 #include <memory>
 #include <windows.h>
 #include <string>
+#include <ctime>
 
 #include "Logger.h"
 
@@ -30,10 +31,16 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	createMainWindow(hinstance, nCmdShow);
 
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
+	while (true)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		//break;
+		LOG("IN LOOP");
 	}
 
 	return (int)msg.wParam;
@@ -95,18 +102,25 @@ bool createMainWindow(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
 	switch (message)
 	{
 	case WM_PAINT:
-
+	{
 		PAINTSTRUCT ps;
-		char greeting[] = "Hello, World!";
 		HDC hdc = BeginPaint(hWnd, &ps);
-		TextOut(hdc, 5, 5, greeting, sizeof(greeting));
+
+		//int seconds = static_cast<int>(time(NULL));
+		//std::string greeting = std::to_string(seconds);
+
+		time_t rawtime;
+		time(&rawtime);
+
+		std::string timeString = std::string(ctime(&rawtime));
+
+		TextOut(hdc, 10, 10, timeString.c_str(), timeString.size());
 		EndPaint(hWnd, &ps);
 		break;
-
+	}
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
